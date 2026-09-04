@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Acesso Restrito - NTI</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            background: #0b0d15;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(16, 24, 40, 0.8) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(30, 20, 50, 0.7) 0%, transparent 60%),
+                linear-gradient(145deg, #0a0c14 0%, #121624 100%);
+            position: relative;
+        }
+
+        /* ===== SELO DE SEGURANÇA ===== */
+        body::before {
+            content: "🔒 ACESSO RESTRITO";
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #a0b4d0;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        /* ===== CONTAINER ===== */
+        .conteiner {
+            width: 100%;
+            max-width: 560px;
+            margin: 0 auto;
+            padding-top: 40px;
+        }
+
+        /* ===== CARD ===== */
+        .base {
+            background: rgba(18, 22, 36, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 40px 40px 36px;
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(255, 255, 255, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #f0f4ff;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== TOPO ===== */
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 18px;
+        }
+
+        .topo h1 {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topo h1 .badge {
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            color: #f5d742;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .topo a {
+            color: #7a8aa8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 450;
+            transition: color 0.2s;
+            padding: 6px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .topo a:hover {
+            color: #f0f4ff;
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* ===== TIPO DE BUSCA ===== */
+        .tipo-busca {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tipo-busca label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #8a9bb8;
+            transition: color 0.2s;
+            font-weight: 450;
+        }
+
+        .tipo-busca label:hover {
+            color: #f0f4ff;
+        }
+
+        .tipo-busca input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #2c3b55;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .tipo-busca input[type="radio"]:checked {
+            border-color: #6c8cff;
+            background: #6c8cff;
+            box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.15);
+        }
+
+        .tipo-busca input[type="radio"]:checked::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .tipo-busca input[type="radio"]:checked + label {
+            color: #f0f4ff;
+        }
+
+        /* ===== INPUT ===== */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.35);
+            color: #f0f4ff;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            font-weight: 450;
+            letter-spacing: 0.5px;
+            height: 60px;
+            text-transform: uppercase;
+        }
+
+        .input-group input::placeholder {
+            text-transform: none;
+            color: #5a6a88;
+            letter-spacing: 0.2px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6c8cff;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 4px rgba(108, 140, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== BOTÕES ===== */
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(145deg, #4a6cf7, #6c4bf7);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 24px rgba(74, 108, 247, 0.25);
+            position: relative;
+            overflow: hidden;
+            height: 60px;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent);
+            pointer-events: none;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 12px 36px rgba(74, 108, 247, 0.35);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 4px 12px rgba(74, 108, 247, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        button.transferir {
+            background: linear-gradient(145deg, #2ecc71, #1db85e);
+            box-shadow: 0 8px 24px rgba(46, 204, 113, 0.25);
+            margin-top: 20px;
+        }
+
+        button.transferir:hover:not(:disabled) {
+            box-shadow: 0 12px 36px rgba(46, 204, 113, 0.35);
+        }
+
+        /* ===== AÇÕES DE ESPECIALIDADE ===== */
+        .linha-botoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .linha-botoes button {
+            width: auto;
+            flex: 1;
+            margin-top: 0;
+        }
+
+        button.especialidade-add {
+            background: linear-gradient(145deg, #2ecc71, #1db85e);
+            box-shadow: 0 8px 24px rgba(46, 204, 113, 0.25);
+        }
+
+        button.especialidade-add:hover:not(:disabled) {
+            box-shadow: 0 12px 36px rgba(46, 204, 113, 0.35);
+        }
+
+        button.especialidade-del {
+            background: linear-gradient(145deg, #ff5e5e, #d83a3a);
+            box-shadow: 0 8px 24px rgba(255, 70, 70, 0.25);
+        }
+
+        button.especialidade-del:hover:not(:disabled) {
+            box-shadow: 0 12px 36px rgba(255, 70, 70, 0.35);
+        }
+
+        .painel-especialidade {
+            margin-top: 16px;
+            padding: 18px;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .painel-especialidade select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            font-size: 15px;
+            background: rgba(0, 0, 0, 0.35);
+            color: #f0f4ff;
+            margin-bottom: 16px;
+        }
+
+        /* ===== RESULTADO ===== */
+        #resultado {
+            margin-top: 24px;
+            padding: 0;
+            border-radius: 16px;
+            display: none;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .resultado-header {
+            padding: 16px 22px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .resultado-body {
+            padding: 20px 22px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .resultado-body p {
+            margin-bottom: 8px;
+            font-size: 15px;
+            color: #d0d8ee;
+            line-height: 1.6;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .resultado-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .resultado-body p strong {
+            color: #f0f4ff;
+            font-weight: 500;
+            min-width: 120px;
+            display: inline-block;
+        }
+
+        .resultado-body .status-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        .status-badge.ativo {
+            background: rgba(46, 204, 113, 0.15);
+            color: #7ae0a8;
+        }
+
+        .status-badge.inativo {
+            background: rgba(255, 70, 70, 0.15);
+            color: #ff7a7a;
+        }
+
+        .status-badge.pendente {
+            background: rgba(255, 193, 7, 0.15);
+            color: #f5d742;
+        }
+
+        .resultado-mensagem {
+            padding: 12px 22px;
+            font-size: 14px;
+            font-weight: 450;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* Cores dos estados */
+        #resultado.sucesso {
+            border-color: rgba(46, 204, 113, 0.2);
+        }
+
+        #resultado.sucesso .resultado-header {
+            background: rgba(46, 204, 113, 0.08);
+            color: #7ae0a8;
+        }
+
+        #resultado.sucesso .resultado-mensagem {
+            background: rgba(46, 204, 113, 0.04);
+            color: #7ae0a8;
+        }
+
+        #resultado.aviso {
+            border-color: rgba(255, 193, 7, 0.2);
+        }
+
+        #resultado.aviso .resultado-header {
+            background: rgba(255, 193, 7, 0.08);
+            color: #f5d742;
+        }
+
+        #resultado.aviso .resultado-mensagem {
+            background: rgba(255, 193, 7, 0.04);
+            color: #f5d742;
+        }
+
+        #resultado.erro {
+            border-color: rgba(255, 70, 70, 0.2);
+        }
+
+        #resultado.erro .resultado-header {
+            background: rgba(255, 70, 70, 0.08);
+            color: #ff7a7a;
+        }
+
+        #resultado.erro .resultado-body p {
+            color: #ff7a7a;
+        }
+
+        #resultado.erro .resultado-mensagem {
+            background: rgba(255, 70, 70, 0.04);
+            color: #ff7a7a;
+        }
+
+        /* ===== LOADING OVERLAY ===== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 10, 18, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-spinner {
+            width: 52px;
+            height: 52px;
+            border: 3px solid rgba(255, 255, 255, 0.04);
+            border-top: 3px solid #6c8cff;
+            border-radius: 50%;
+            animation: spin 0.9s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+            margin-bottom: 24px;
+            box-shadow: 0 0 40px rgba(108, 140, 255, 0.1);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #f0f4ff;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 600px) {
+            body::before {
+                font-size: 9px;
+                padding: 6px 16px;
+                top: 12px;
+                letter-spacing: 1.5px;
+                white-space: nowrap;
+            }
+
+            .conteiner {
+                padding-top: 30px;
+            }
+
+            .base {
+                padding: 28px 20px 28px;
+                border-radius: 24px;
+            }
+
+            .topo h1 {
+                font-size: 17px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .topo a {
+                font-size: 13px;
+                padding: 4px 12px;
+            }
+
+            .tipo-busca {
+                gap: 14px;
+            }
+
+            .tipo-busca label {
+                font-size: 13px;
+            }
+
+            .input-group input {
+                padding: 14px 16px;
+                font-size: 15px;
+                height: 56px;
+            }
+
+            button {
+                height: 56px;
+                font-size: 15px;
+                padding: 14px;
+            }
+
+            .resultado-header {
+                padding: 14px 18px;
+                font-size: 14px;
+            }
+
+            .resultado-body {
+                padding: 16px 18px;
+            }
+
+            .resultado-body p {
+                font-size: 14px;
+                flex-wrap: wrap;
+            }
+
+            .resultado-body p strong {
+                min-width: 100px;
+            }
+
+            .resultado-mensagem {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .base {
+                padding: 20px 14px 24px;
+                border-radius: 20px;
+            }
+
+            .topo {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .topo h1 {
+                font-size: 16px;
+            }
+
+            .input-group input {
+                font-size: 14px;
+                height: 50px;
+                padding: 12px 14px;
+            }
+
+            button {
+                height: 50px;
+                font-size: 14px;
+                padding: 12px;
+            }
+
+            .tipo-busca {
+                gap: 10px;
+            }
+
+            .tipo-busca label {
+                font-size: 12px;
+            }
+
+            .resultado-body p strong {
+                min-width: 80px;
+            }
+        }
+
+        /* ===== MODAL DE RESULTADO ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 10, 18, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1500;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .modal-conteudo {
+            background: rgba(18, 22, 36, 0.95);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 560px;
+            width: 100%;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #f0f4ff;
+        }
+
+        button.modal-fechar {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            color: #f0f4ff;
+            font-size: 20px;
+            line-height: 1;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+        }
+
+        button.modal-fechar:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 600px) {
+            .modal-overlay {
+                padding: 20px 12px;
+            }
+
+            .modal-conteudo {
+                padding: 24px 18px;
+                border-radius: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="conteiner">
+        <div class="base">
+            <div class="topo">
+                <h1>
+                   <span class="badge">NTI · Transferência</span>
+                </h1>
+                <a href="/logout">Sair</a>
+            </div>
+
+            <form id="pesquisaForm">
+                <div class="tipo-busca">
+                    <label>
+                        <input type="radio" name="tipoBusca" value="cpf" checked>
+                        CPF
+                    </label>
+                    <label>
+                        <input type="radio" name="tipoBusca" value="nome">
+                        Nome
+                    </label>
+                    <label>
+                        <input type="radio" name="tipoBusca" value="login">
+                        Login
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="valorBusca" placeholder="Consultar Usuários" required autocomplete="off">
+                </div>
+
+                <button type="submit" id="btnPesquisar">Consultar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE RESULTADO -->
+    <div id="modalResultado" class="modal-overlay">
+        <div class="modal-conteudo">
+            <button type="button" id="btnFecharModal" class="modal-fechar">&times;</button>
+
+            <div id="resultado"></div>
+
+            <button type="button" id="btnTransferir" class="transferir" style="display:none;">Transferir Usuário</button>
+
+            <div id="acoesEspecialidade" style="display:none;">
+                <div class="linha-botoes">
+                    <button type="button" id="btnAdicionarEsp" class="especialidade-add">Adicionar Especialidade</button>
+                    <button type="button" id="btnExcluirEsp" class="especialidade-del">Excluir Especialidade</button>
+                </div>
+
+                <div id="painelAdicionarEsp" class="painel-especialidade" style="display:none;">
+                    <select id="selectEspecialidadeAdicionar"></select>
+                    <div class="tipo-busca" style="margin-bottom:18px;">
+                        <label><input type="radio" name="ambulatorioAdicionar" value="SIM" checked> Atende Ambulatório</label>
+                        <label><input type="radio" name="ambulatorioAdicionar" value="NÃO"> Não atende Ambulatório</label>
+                    </div>
+                    <button type="button" id="btnConfirmarAdicionarEsp" class="especialidade-add">Confirmar Adição</button>
+                </div>
+
+                <div id="painelExcluirEsp" class="painel-especialidade" style="display:none;">
+                    <select id="selectEspecialidadeExcluir"></select>
+                    <button type="button" id="btnConfirmarExcluirEsp" class="especialidade-del">Confirmar Exclusão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY LOADING -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Consultando...</div>
+        <div class="loading-subtext">Aguarde, isso pode levar alguns segundos</div>
+    </div>
+
+    <script>
+        const form = document.getElementById('pesquisaForm');
+        const resultadoDiv = document.getElementById('resultado');
+        const btnTransferir = document.getElementById('btnTransferir');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+
+        const modalResultado = document.getElementById('modalResultado');
+        const btnFecharModal = document.getElementById('btnFecharModal');
+
+        const acoesEspecialidade = document.getElementById('acoesEspecialidade');
+        const btnAdicionarEsp = document.getElementById('btnAdicionarEsp');
+        const btnExcluirEsp = document.getElementById('btnExcluirEsp');
+        const painelAdicionarEsp = document.getElementById('painelAdicionarEsp');
+        const painelExcluirEsp = document.getElementById('painelExcluirEsp');
+        const selectEspecialidadeAdicionar = document.getElementById('selectEspecialidadeAdicionar');
+        const selectEspecialidadeExcluir = document.getElementById('selectEspecialidadeExcluir');
+        const btnConfirmarAdicionarEsp = document.getElementById('btnConfirmarAdicionarEsp');
+        const btnConfirmarExcluirEsp = document.getElementById('btnConfirmarExcluirEsp');
+
+        let buscaAtual = null;
+        let especialidadesAtuais = [];
+
+        // ===== CONVERTE INPUT PARA UPPERCASE =====
+        const valorBusca = document.getElementById('valorBusca');
+        valorBusca.addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        function getStatusBadge(status) {
+            const statusMap = {
+                'ATIVO': 'ativo',
+                'ATIVO VITAE': 'ativo',
+                'INATIVO': 'inativo',
+                'PENDENTE': 'pendente',
+                'BLOQUEADO': 'inativo'
+            };
+            const classe = statusMap[status?.toUpperCase()] || 'pendente';
+            return `<span class="status-badge ${classe}">${status || 'N/A'}</span>`;
+        }
+
+        function abrirModalResultado() {
+            modalResultado.style.display = 'flex';
+        }
+
+        function fecharModalResultado() {
+            modalResultado.style.display = 'none';
+            painelAdicionarEsp.style.display = 'none';
+            painelExcluirEsp.style.display = 'none';
+        }
+
+        btnFecharModal.addEventListener('click', fecharModalResultado);
+
+        // Clicar fora do conteúdo (no fundo escurecido) também fecha o modal
+        modalResultado.addEventListener('click', (e) => {
+            if (e.target === modalResultado) {
+                fecharModalResultado();
+            }
+        });
+
+        function mostrarResultado(classe, headerIcon, headerText, bodyHtml, mensagem = '') {
+            resultadoDiv.className = classe;
+            resultadoDiv.style.display = 'block';
+
+            let html = `
+                <div class="resultado-header">
+                    ${headerIcon} ${headerText}
+                </div>
+                <div class="resultado-body">
+                    ${bodyHtml}
+                </div>
+            `;
+
+            if (mensagem) {
+                html += `<div class="resultado-mensagem">${mensagem}</div>`;
+            }
+
+            resultadoDiv.innerHTML = html;
+            abrirModalResultado();
+        }
+
+        function mostrarLoading(texto) {
+            loadingText.textContent = texto;
+            loadingOverlay.style.display = 'flex';
+        }
+
+        function esconderLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        // Monta o corpo do resultado com os dados do usuário + Especialidades + Grupos
+        function montarBodyHtml(data) {
+            let html = `
+                <p><strong>👤 Nome:</strong> ${data.nome || '-'}</p>
+                <p><strong>🔑 Login:</strong> ${data.login || '-'}</p>
+                <p><strong>🏢 Unidade:</strong> ${data.unidade || '-'}</p>
+                <p><strong>📊 Status:</strong> ${getStatusBadge(data.status)}</p>
+            `;
+
+            if (data.especialidades && data.especialidades.length > 0) {
+                const lista = data.especialidades
+                    .map(e => `${e.especialidade} (Ambulatório: ${e.atendeAmbulatorio}, Ativo: ${e.ativo})`)
+                    .join('<br>');
+                html += `<p><strong>📋 Especialidades:</strong> ${lista}</p>`;
+            } else {
+                html += `<p><strong>📋 Especialidades:</strong> Nenhuma cadastrada</p>`;
+            }
+
+            if (data.grupos && data.grupos.length > 0) {
+                html += `<p><strong>👥 Grupos:</strong> ${data.grupos.join('<br>')}</p>`;
+            }
+
+            return html;
+        }
+
+        // Mostra/esconde os botões Adicionar/Excluir Especialidade (só quando já no HRN) e
+        // guarda a lista atual de especialidades para alimentar o select de exclusão.
+        function atualizarAcoesEspecialidade(data) {
+            especialidadesAtuais = data.especialidades || [];
+            painelAdicionarEsp.style.display = 'none';
+            painelExcluirEsp.style.display = 'none';
+            acoesEspecialidade.style.display = data.jaNoHRN ? 'block' : 'none';
+        }
+
+        // Repete a última consulta (usado depois de transferir/adicionar/excluir) para atualizar
+        // a tela com os dados mais recentes, sem duplicar a lógica de exibição.
+        async function reconsultar(headerTextoSucesso = 'Usuário Encontrado') {
+            if (!buscaAtual) {
+                esconderLoading();
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/pesquisar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(buscaAtual)
+                });
+                const data = await response.json();
+
+                esconderLoading();
+
+                if (!data.encontradoListagem) {
+                    mostrarResultado('erro', '❌', 'Usuário não encontrado', `<p>${data.mensagem || 'Usuário não encontrado.'}</p>`);
+                    btnTransferir.style.display = 'none';
+                    acoesEspecialidade.style.display = 'none';
+                    return;
+                }
+
+                const bodyHtml = montarBodyHtml(data);
+
+                if (data.podeTransferir) {
+                    mostrarResultado('sucesso', '✅', headerTextoSucesso, bodyHtml);
+                    btnTransferir.style.display = 'block';
+                } else {
+                    mostrarResultado('sucesso', '✅', headerTextoSucesso, bodyHtml, data.mensagem);
+                    btnTransferir.style.display = 'none';
+                }
+
+                atualizarAcoesEspecialidade(data);
+            } catch (error) {
+                esconderLoading();
+                mostrarResultado('erro', '❌', 'Erro de conexão', `<p>Não foi possível atualizar os dados. Consulte novamente.</p>`);
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tipoBusca = document.querySelector('input[name="tipoBusca"]:checked').value;
+            const valor = document.getElementById('valorBusca').value.trim();
+
+            if (!valor) return;
+
+            btnTransferir.style.display = 'none';
+            acoesEspecialidade.style.display = 'none';
+            resultadoDiv.style.display = 'none';
+            fecharModalResultado();
+            mostrarLoading('Consultando...');
+
+            try {
+                const response = await fetch('/api/pesquisar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tipoBusca, valor })
+                });
+                const data = await response.json();
+
+                esconderLoading();
+
+                if (!data.encontradoListagem) {
+                    mostrarResultado(
+                        'erro',
+                        '❌',
+                        'Usuário não encontrado',
+                        `<p>${data.mensagem || 'Nenhum usuário encontrado com os critérios informados.'}</p>`
+                    );
+                    return;
+                }
+
+                buscaAtual = { tipoBusca, valor };
+                const bodyHtml = montarBodyHtml(data);
+
+                if (data.podeTransferir) {
+                    mostrarResultado('sucesso', '✅', 'Usuário Encontrado', bodyHtml);
+                    btnTransferir.style.display = 'block';
+                } else {
+                    const motivo = data.mensagem || 'Usuário não pode ser transferido no momento.';
+                    mostrarResultado('aviso', '⚠️', 'Usuário Encontrado', bodyHtml, motivo);
+                    btnTransferir.style.display = 'none';
+                }
+
+                atualizarAcoesEspecialidade(data);
+            } catch (error) {
+                esconderLoading();
+                mostrarResultado(
+                    'erro',
+                    '❌',
+                    'Erro de conexão',
+                    `<p>Não foi possível conectar ao servidor. Verifique sua rede e tente novamente.</p>`
+                );
+            }
+        });
+
+        btnTransferir.addEventListener('click', async () => {
+            if (!buscaAtual) return;
+
+            btnTransferir.disabled = true;
+            mostrarLoading('Transferindo Usuário...');
+
+            try {
+                const response = await fetch('/api/transferir', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(buscaAtual)
+                });
+                const data = await response.json();
+
+                btnTransferir.disabled = false;
+                btnTransferir.style.display = 'none';
+
+                if (data.sucesso) {
+                    // Reconsulta para já mostrar Especialidades/Grupos atualizados e habilitar
+                    // os botões de gerenciar especialidade (agora que está no HRN).
+                    mostrarLoading('Atualizando dados...');
+                    await reconsultar('Usuário Transferido');
+                } else {
+                    esconderLoading();
+                    mostrarResultado(
+                        'erro',
+                        '❌',
+                        'Falha na transferência',
+                        `<p>${data.erro || 'Erro ao transferir usuário.'}</p>`
+                    );
+                }
+            } catch (error) {
+                esconderLoading();
+                btnTransferir.disabled = false;
+                mostrarResultado(
+                    'erro',
+                    '❌',
+                    'Erro de conexão',
+                    `<p>Não foi possível concluir a transferência. Verifique sua rede e tente novamente.</p>`
+                );
+            }
+        });
+
+        // ===== ADICIONAR ESPECIALIDADE =====
+        btnAdicionarEsp.addEventListener('click', async () => {
+            painelExcluirEsp.style.display = 'none';
+
+            if (painelAdicionarEsp.style.display === 'block') {
+                painelAdicionarEsp.style.display = 'none';
+                return;
+            }
+
+            mostrarLoading('Buscando especialidades disponíveis...');
+            try {
+                const response = await fetch('/api/especialidades-disponiveis', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                esconderLoading();
+
+                if (!data.especialidades || data.especialidades.length === 0) {
+                    alert('Nenhuma especialidade disponível para adicionar.');
+                    return;
+                }
+
+                selectEspecialidadeAdicionar.innerHTML = data.especialidades
+                    .map(e => `<option value="${e.valor}">${e.nome}</option>`)
+                    .join('');
+                painelAdicionarEsp.style.display = 'block';
+            } catch (error) {
+                esconderLoading();
+                alert('Não foi possível buscar as especialidades disponíveis.');
+            }
+        });
+
+        btnConfirmarAdicionarEsp.addEventListener('click', async () => {
+            const especialidadeValor = selectEspecialidadeAdicionar.value;
+            const fazAmbulatorio = document.querySelector('input[name="ambulatorioAdicionar"]:checked').value;
+
+            mostrarLoading('Adicionando especialidade...');
+            try {
+                const response = await fetch('/api/especialidade/adicionar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ especialidadeValor, fazAmbulatorio })
+                });
+                const data = await response.json();
+
+                // A confirmação de "salvo com sucesso" do Vitae é pouco confiável (já vimos
+                // falso negativo: aparece "não foi possível confirmar" mas salvou de verdade).
+                // Por isso sempre reconsultamos pra mostrar o estado real, em vez de confiar
+                // nessa flag e parar sem atualizar a tela quando ela falha.
+                if (!data.sucesso) {
+                    console.warn('Confirmação de salvamento não detectada, verificando estado real...', data.erro);
+                }
+
+                painelAdicionarEsp.style.display = 'none';
+                mostrarLoading('Atualizando dados...');
+                await reconsultar();
+            } catch (error) {
+                esconderLoading();
+                alert('Erro de conexão ao adicionar especialidade.');
+            }
+        });
+
+        // ===== EXCLUIR ESPECIALIDADE =====
+        btnExcluirEsp.addEventListener('click', () => {
+            painelAdicionarEsp.style.display = 'none';
+
+            if (painelExcluirEsp.style.display === 'block') {
+                painelExcluirEsp.style.display = 'none';
+                return;
+            }
+
+            if (!especialidadesAtuais || especialidadesAtuais.length === 0) {
+                alert('Este usuário não possui especialidades cadastradas para excluir.');
+                return;
+            }
+
+            selectEspecialidadeExcluir.innerHTML = especialidadesAtuais
+                .map((e, i) => `<option value="${i}">${e.especialidade} (Ambulatório: ${e.atendeAmbulatorio}, Ativo: ${e.ativo})</option>`)
+                .join('');
+            painelExcluirEsp.style.display = 'block';
+        });
+
+        btnConfirmarExcluirEsp.addEventListener('click', async () => {
+            const rowIndex = parseInt(selectEspecialidadeExcluir.value, 10);
+
+            mostrarLoading('Excluindo especialidade...');
+            try {
+                const response = await fetch('/api/especialidade/excluir', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rowIndex })
+                });
+                const data = await response.json();
+
+                // Mesmo motivo do adicionar: a confirmação de sucesso é pouco confiável, então
+                // sempre reconsultamos em vez de parar quando ela falha.
+                if (!data.sucesso) {
+                    console.warn('Confirmação de salvamento não detectada, verificando estado real...', data.erro);
+                }
+
+                painelExcluirEsp.style.display = 'none';
+                mostrarLoading('Atualizando dados...');
+                await reconsultar();
+            } catch (error) {
+                esconderLoading();
+                alert('Erro de conexão ao excluir especialidade.');
+            }
+        });
+    </script>
+</body>
+</html>

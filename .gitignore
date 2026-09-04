@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.local
+
+# Runtime logs - contain real user PII (names, emails, VITAE logins/units) captured from production use
+logs/*.log
+
+# Express sessions persisted to disk (session-file-store) - contain plaintext VITAE passwords
+# in req.session.password while a login is active. Never commit.
+sessions/*.json
+
+# Internal allowlist of real VITAE logins authorized to use this app - not for public disclosure.
+# See json/usuarios_permitidos.example.json for the expected shape.
+json/usuarios_permitidos.json
+
+# Runtime-generated cache of VITAE unit options (harvested from a live login, not source data)
+json/unidades.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
